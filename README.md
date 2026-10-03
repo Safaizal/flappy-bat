@@ -13,6 +13,7 @@ npm run dev      # dev server with HMR
 npm run build    # production build → dist/
 npm run preview  # preview the production build
 npm run lint     # oxlint
+npm run deploy   # build + deploy to GitHub Pages
 ```
 
 ## Controls
@@ -100,3 +101,27 @@ it through the actual `requestAnimationFrame` loop, and the drawn pipe geometry 
 against the engine's own collision test. It checks the state machine, scoring, coin pickup,
 gap-placement invariants, framerate independence and a clean unmount with zero console
 errors.
+
+## Deployment & Live URL
+
+Play the game in your browser: https://safaizal.github.io/flappy-bat/
+
+- Built with Vite (`npm run build` → `dist/`)
+- Deploy to GitHub Pages: `npm run deploy` (uses `gh-pages` npm package + `base: '/flappy-bat/'` in `vite.config.js`)
+- The `dist/` folder is published to the `gh-pages` branch; GitHub Pages serves it automatically
+
+## Responsiveness
+
+The game canvas is resolution-independent — the 480×700 logical coordinate space is
+scaled to whatever CSS size the stage element receives, with the canvas backing store
+multiplied by `devicePixelRatio` (capped at 2×) for sharp rendering on retina displays.
+CSS uses `aspect-ratio`, `clamp()` font sizes and `dvh` units so the layout fits any
+screen from mobile to ultrawide.
+
+### Pipe rendering fix
+
+Lower pipes were rendering with the flared cap at the bottom (near the ground) instead
+of at the top (near the gap), making them appear upside-down. Fixed in `sprites.js`
+by adding a `capAtTop` flag to `drawPipePart` so the bottom pipe segment draws its cap
+at the top, with the body extending downward — matching the visual orientation of the
+upper pipe.

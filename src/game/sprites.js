@@ -233,17 +233,22 @@ function GROUND_H_H() {
    what is drawn — no more 80px mismatch)
    ═══════════════════════════════════════════════ */
 export function drawPipe(ctx, p) {
-  drawPipePart(ctx, p.x, 0, p.gapY)
-  drawPipePart(ctx, p.x, p.gapY + p.gap, PLAY_H - (p.gapY + p.gap))
+  drawPipePart(ctx, p.x, 0, p.gapY, false)
+  drawPipePart(ctx, p.x, p.gapY + p.gap, PLAY_H - (p.gapY + p.gap), true)
 }
 
-function drawPipePart(ctx, x, y, h) {
+function drawPipePart(ctx, x, y, h, capAtTop = false) {
   if (h <= 0) return
   const capH = Math.min(PIPE_CAP_H, h)
   const bodyH = h - capH
 
-  if (bodyH > 0) pipeRect(ctx, x, y, PIPE_W, bodyH, false)
-  pipeRect(ctx, x - PIPE_CAP_OVERHANG, y + bodyH, PIPE_W + PIPE_CAP_OVERHANG * 2, capH, true)
+  if (capAtTop) {
+    if (bodyH > 0) pipeRect(ctx, x, y + capH, PIPE_W, bodyH, false)
+    pipeRect(ctx, x - PIPE_CAP_OVERHANG, y, PIPE_W + PIPE_CAP_OVERHANG * 2, capH, true)
+  } else {
+    if (bodyH > 0) pipeRect(ctx, x, y, PIPE_W, bodyH, false)
+    pipeRect(ctx, x - PIPE_CAP_OVERHANG, y + bodyH, PIPE_W + PIPE_CAP_OVERHANG * 2, capH, true)
+  }
 }
 
 function pipeRect(ctx, x, y, w, h, isCap) {
